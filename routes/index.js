@@ -1,10 +1,15 @@
 const express = require("express");
+const {
+  createAppointment,
+  createAppointmentSchema
+} = require("../controllers/appointments");
+const validateBody = require("../middlewares/validation");
 
 const router = express.Router();
 
-/* GET home page. */
-router.get("/", function(req, res, next) {
-  res.render("index", { title: "Express" });
-});
+router
+  .route("/appointments")
+  .post(validateBody(createAppointmentSchema))
+  .post(createAppointment);
 
 module.exports = router;
