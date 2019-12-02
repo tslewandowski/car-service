@@ -14,7 +14,7 @@ module.exports.createAppointmentSchema = Joi.object().keys({
     .required(),
   end: Joi.date()
     .iso()
-    .greater(Joi.ref('start'))
+    .greater(Joi.ref("start"))
     .required(),
   price: Joi.number()
     .integer()
@@ -37,3 +37,13 @@ const createAppointment = async (req, res) => {
 };
 
 module.exports.createAppointment = asyncHandler(createAppointment);
+
+const deleteAppointment = async (req, res) => {
+  await knex("appointments")
+    .where("id", req.params.id)
+    .del();
+
+  res.status(204).json({});
+};
+
+module.exports.deleteAppointment = asyncHandler(deleteAppointment);

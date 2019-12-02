@@ -1,7 +1,8 @@
 const express = require("express");
 const {
   createAppointment,
-  createAppointmentSchema
+  createAppointmentSchema,
+  deleteAppointment
 } = require("../controllers/appointments");
 const validateBody = require("../middlewares/validation");
 
@@ -11,5 +12,7 @@ router
   .route("/appointments")
   .post(validateBody(createAppointmentSchema))
   .post(createAppointment);
+
+router.route("/appointments/:id").delete(deleteAppointment);
 
 module.exports = router;

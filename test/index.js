@@ -4,6 +4,7 @@ const moment = require("moment");
 const app = require("../app");
 
 describe("appointments", () => {
+  let id;
   describe("POST /appointments", () => {
     it("creates an appointment", async () => {
       const res = await request(app)
@@ -21,7 +22,8 @@ describe("appointments", () => {
         })
         .expect(200);
 
-      assert(typeof res.body.id === "number");
+      ({ id } = res.body);
+      assert(typeof id === "number");
     });
 
     it("returns 400 if it fails validation", async () => {
@@ -32,7 +34,7 @@ describe("appointments", () => {
     });
 
     it("returns 400 if start is after end", async () => {
-      await await request(app)
+      await request(app)
         .post("/appointments")
         .send({
           start: moment()
@@ -46,6 +48,15 @@ describe("appointments", () => {
           price: 2000
         })
         .expect(400);
+    });
+  });
+
+  describe("DELETE /appointments/:id", () => {
+    it("returns a 204 and deletes the resource", async () => {
+      await request(app)
+        .del(`/appointments/${id}`)
+        .send()
+        .expect(204);
     });
   });
 });
