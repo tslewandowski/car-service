@@ -48,6 +48,35 @@ const deleteAppointment = async (req, res) => {
 
 module.exports.deleteAppointment = asyncHandler(deleteAppointment);
 
+module.exports.updateAppointmentSchema = Joi.object().keys({
+  status: Joi.string().required()
+});
+
+const updateAppointment = async (req, res) => {
+  const [updatedID] = await knex("appointments")
+    .returning("id")
+    .where("id", req.params.id)
+    .update({ status: req.body.status });
+
+  if (!updatedID) {
+    res.status(404).send();
+  }
+
+  const [updated] = await knex("appointments")
+    .where("id", req.params.id)
+    .select("*");
+
+  res.status(200).send({
+    id: updated.id,
+    start: updated.start,
+    end: updated.end,
+    status: updated.status,
+    price: updated.price
+  });
+};
+
+module.exports.updateAppointment = asyncHandler(updateAppointment);
+
 const getAppointment = async (req, res) => {
   const [appointment] = await knex("appointments")
     .where("id", req.params.id)

@@ -13,7 +13,6 @@
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "knex": "^0.20.3",
-    "moment": "^2.24.0",
     "morgan": "~1.9.1",
     "pg": "^7.14.0"
   },
@@ -24,6 +23,7 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
     "mocha": "^6.2.2",
+    "moment": "^2.24.0",
     "prettier": "^1.19.1",
     "supertest": "^4.0.2"
   }

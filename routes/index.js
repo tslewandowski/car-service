@@ -4,7 +4,9 @@ const {
   createAppointmentSchema,
   deleteAppointment,
   getAppointment,
-  listAppointments
+  listAppointments,
+  updateAppointmentSchema,
+  updateAppointment
 } = require("../controllers/appointments");
 const validateBody = require("../middlewares/validation");
 
@@ -19,6 +21,8 @@ router
 router
   .route("/appointments/:id")
   .delete(deleteAppointment)
+  .put(validateBody(updateAppointmentSchema))
+  .put(updateAppointment)
   .get(getAppointment);
 
 module.exports = router;

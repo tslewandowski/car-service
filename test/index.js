@@ -61,6 +61,29 @@ describe("appointments", () => {
     });
   });
 
+  describe("PUT /appointments/:id", () => {
+    it("returns a 200 and updates the resource", async () => {
+      const [createdID] = await knex("appointments")
+        .returning("id")
+        .insert({
+          start: moment()
+            .add(2, "days")
+            .add(30, "minutes")
+            .format(),
+          end: moment()
+            .add(2, "days")
+            .format(),
+          status: "tentative",
+          price: 2000
+        });
+
+      await request(app)
+        .put(`/appointments/${createdID}`)
+        .send({ status: "confirmed" })
+        .expect(200);
+    });
+  });
+
   describe("GET /appointments/:id", () => {
     let createdID;
     before(async () => {
