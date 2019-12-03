@@ -47,3 +47,24 @@ const deleteAppointment = async (req, res) => {
 };
 
 module.exports.deleteAppointment = asyncHandler(deleteAppointment);
+
+const getAppointment = async (req, res) => {
+  const [appointment] = await knex("appointments")
+    .where("id", req.params.id)
+    .select("*");
+
+  if (!appointment) {
+    res.status(404).json({});
+    return;
+  }
+
+  res.status(200).json({
+    id: appointment.id,
+    start: appointment.start,
+    end: appointment.end,
+    status: appointment.status,
+    price: appointment.price
+  });
+};
+
+module.exports.getAppointment = asyncHandler(getAppointment);
