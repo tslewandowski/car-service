@@ -95,4 +95,87 @@ describe("appointments", () => {
         .expect(404);
     });
   });
+
+  describe("GET /appointments", () => {
+    it("returns list of appointments ordered by price", async () => {
+      const ids = await knex("appointments")
+        .returning("id")
+        .insert([
+          {
+            start: moment()
+              .add(5, "days")
+              .subtract(30, "minutes")
+              .format(),
+            end: moment()
+              .add(5, "days")
+              .add(3, "hours")
+              .format(),
+            status: "tentative",
+            price: 2000
+          },
+          {
+            start: moment()
+              .add(6, "days")
+              .subtract(30, "minutes")
+              .format(),
+            end: moment()
+              .add(6, "days")
+              .add(3, "hours")
+              .format(),
+            status: "tentative",
+            price: 2000
+          },
+          {
+            start: moment()
+              .add(5, "days")
+              .add(30, "minutes")
+              .format(),
+            end: moment()
+              .add(5, "days")
+              .add(3, "hours")
+              .format(),
+            status: "tentative",
+            price: 2000
+          },
+          {
+            start: moment()
+              .add(2, "days")
+              .add(30, "minutes")
+              .format(),
+            end: moment()
+              .add(2, "days")
+              .format(),
+            status: "tentative",
+            price: 2000
+          }
+        ]);
+
+      const notInID = ids.pop();
+
+      const res = await request(app)
+        .get(
+          `/appointments?from=${moment()
+            .add(5, "days")
+            .format()}&to=${moment()
+            .add(6, "days")
+            .format()}`
+        )
+        .send()
+        .expect(200);
+
+      const retrievedIDs = res.body.map(appointments => appointments.id);
+
+      assert(retrievedIDs.indexOf(notInID) === -1);
+      ids.forEach(includedID => {
+        assert(retrievedIDs.includes(includedID));
+      });
+    });
+
+    it("returns 400 if no dates are provided", async () => {
+      await request(app)
+        .get("/appointments")
+        .send()
+        .expect(400);
+    });
+  });
 });

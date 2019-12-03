@@ -68,3 +68,49 @@ const getAppointment = async (req, res) => {
 };
 
 module.exports.getAppointment = asyncHandler(getAppointment);
+
+const listAppointments = async (req, res) => {
+  const { error: validationError } = Joi.object()
+    .keys({
+      from: Joi.string()
+        .isoDate()
+        .required(),
+      to: Joi.string()
+        .isoDate()
+        .required()
+    })
+    .validate(req.query);
+
+  if (validationError) {
+    res.status(400).json({});
+    return;
+  }
+
+  const { from, to } = req.query;
+
+  const appointments = await knex("appointments")
+    .where(builder => {
+      builder
+        .whereBetween("start", [from, to])
+        .orWhereBetween("end", [from, to])
+        .orWhere(subbuilder => {
+          subbuilder.where("start", "<", from).andWhere("end", ">", to);
+        });
+    })
+    .orderBy("price", "desc")
+    .select();
+
+  res.status(200).json(
+    appointments.map(appointment => {
+      return {
+        id: appointment.id,
+        start: appointment.start,
+        end: appointment.end,
+        status: appointment.status,
+        price: appointment.price
+      };
+    })
+  );
+};
+
+module.exports.listAppointments = asyncHandler(listAppointments);
