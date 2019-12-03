@@ -10,3 +10,5 @@ npx knex migrate:latest # run the migrations. well, migration
 At this point, one should be able to `npm start` and `npm test` to start the server and run the tests respectively.
 
 The function to create appointments at a random interval is located in `./appointmentScheduler.js`.
+
+This is deployed at https://shrouded-garden-61482.herokuapp.com/.
