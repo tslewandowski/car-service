@@ -8,7 +8,7 @@ const {
   updateAppointmentSchema,
   updateAppointment
 } = require("../controllers/appointments");
-const validateBody = require("../middlewares/validation");
+const { validateBody, validatePath } = require("../middlewares/validation");
 
 const router = express.Router();
 
@@ -20,6 +20,7 @@ router
 
 router
   .route("/appointments/:id")
+  .all(validatePath)
   .delete(deleteAppointment)
   .put(validateBody(updateAppointmentSchema))
   .put(updateAppointment)

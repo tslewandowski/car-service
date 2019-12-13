@@ -60,6 +60,7 @@ const updateAppointment = async (req, res) => {
 
   if (!updatedID) {
     res.status(404).send();
+    return;
   }
 
   const [updated] = await knex("appointments")
