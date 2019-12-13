@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi')
+const Joi = require("@hapi/joi");
 
 module.exports.validateBody = schema => (req, res, next) => {
   const { error } = schema.validate(req.body);
@@ -10,8 +10,10 @@ module.exports.validateBody = schema => (req, res, next) => {
 };
 
 const pathSchema = Joi.object().keys({
-  id: Joi.number().integer().required()
-})
+  id: Joi.number()
+    .integer()
+    .required()
+});
 
 module.exports.validatePath = (req, res, next) => {
   const { error } = pathSchema.validate(req.params);
@@ -19,5 +21,5 @@ module.exports.validatePath = (req, res, next) => {
     res.status(400).json({});
   }
 
-  next()
-}
+  next();
+};
